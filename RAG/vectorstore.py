@@ -24,7 +24,7 @@ def create_vectorstore():
     print("Téléchargement du modèle HuggingFace (la première fois seulement) et calculs")
     
     # Initialisation du modèle en local
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
     
     # Création de la base de données
     vector_store = Chroma.from_documents(
@@ -38,7 +38,7 @@ def create_vectorstore():
 
 def get_vectorstore():
     
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
     vector_store = Chroma(
         persist_directory=CHROMA_DB_DIRECTORY, 
         embedding_function=embeddings
