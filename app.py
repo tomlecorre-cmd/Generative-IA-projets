@@ -1,7 +1,5 @@
 import chainlit as cl
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
-
-# On importe ton agent
 from RAG.agent import setup_agent
 
 @cl.on_chat_start
@@ -26,14 +24,11 @@ async def main(message: cl.Message):
     agent = cl.user_session.get("agent")
     history = cl.user_session.get("history")
     
-    # On ajoute ta nouvelle question
     history.append(HumanMessage(content=message.content))
     
-    # --- LA CORRECTION ANTI-CRASH GROQ ---
-    # On garde toujours le SystemMessage (index 0), mais on ne garde que les 4 derniers messages de la conversation
     if len(history) > 5:
         history = [history[0]] + history[-4:]
-    # --------------------------------------
+    
     
     inputs = {"messages": history}
 
@@ -43,7 +38,7 @@ async def main(message: cl.Message):
     final_response = ""
     
     try:
-        # CORRECTION DU CHARGEMENT INFINI : On utilise bien "astream" ici !
+        
         async for chunk in agent.astream(inputs, stream_mode="values"):
             last_msg = chunk["messages"][-1]
             
@@ -53,7 +48,7 @@ async def main(message: cl.Message):
         msg.content = final_response
         await msg.update()
         
-        # On sauvegarde la réponse
+       
         history.append(AIMessage(content=final_response))
         cl.user_session.set("history", history)
         
