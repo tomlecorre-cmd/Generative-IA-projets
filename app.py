@@ -55,3 +55,6 @@ async def main(message: cl.Message):
     except Exception as e:
         msg.content = f"❌ Oups, erreur de l'Agent : {e}"
         await msg.update()
+
+
+# Modification par Rishi
