@@ -26,6 +26,7 @@ def setup_agent():
     
     @tool
     def recherche_documents_internes(query: str) -> str:
+        """Outil PRIORITAIRE. Utilise-le pour chercher la stratégie de TotalEnergies, ou les rapports du FMI et de la Banque de France."""
         return retriever.invoke(query)
 
     @tool
