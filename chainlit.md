@@ -1,14 +1,20 @@
-# Welcome to Chainlit! 🚀🤖
+# 📈 Assistant Financier Intelligent
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+Bienvenue ! Je suis votre assistant financier propulsé par **Llama 3** et **LangGraph**.
 
-## Useful Links 🔗
+## 💡 Ce que je peux faire
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
+- 📄 Répondre sur les rapports **FMI, Banque de France, TotalEnergies**
+- 📊 Consulter des **cours boursiers** en temps réel (Yahoo Finance)
+- 🔍 Effectuer des **recherches web** et dans les publications scientifiques
+- 🧮 Réaliser des **calculs financiers** précis
 
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
+## 🚀 Exemples de questions
 
-## Welcome screen
+- *"Quelles sont les prévisions du FMI pour la croissance mondiale ?"*
+- *"Quel est le cours actuel de l'action TotalEnergies ?"*
+- *"Calcule la valeur de 500 actions à 76€"*
+- *"Cherche les dernières actualités sur l'inflation en Europe"*
 
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
+---
+Projet réalisé dans le cadre du **DU Data Analytics — IA Générative 2026**
