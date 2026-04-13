@@ -19,14 +19,14 @@ def setup_rag_chain():
     retriever = vector_store.as_retriever(search_kwargs={"k": 10})
 
     print(" Initialisation de Llama 3 (via Groq)...")
-    llm = ChatGroq(model_name="llama-3.1-8b-instant", temperature=0)
+    llm = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0)
 
-    # Le Prompt
     template = """Tu es un assistant expert en analyse économique et financière.
 Utilise EXCLUSIVEMENT les éléments de contexte suivants pour répondre à la question.
 Si la réponse ne se trouve pas dans le contexte, dis simplement que tu ne sais pas.
 
-RÈGLE ABSOLUE : Tu dois OBLIGATOIREMENT citer le nom du document ou l'entreprise dont tu tires l'information dans ta réponse (ex: "Selon le document de TotalEnergies..." ou "D'après les perspectives du FMI...").
+RÈGLE ABSOLUE : Tu dois OBLIGATOIREMENT citer le nom du document dont tu tires l'information.
+RÈGLE ABSOLUE : Termine TOUJOURS ta réponse en gras par : **Source : [nom exact du fichier PDF]**
 
 Contexte :
 {context}
@@ -37,11 +37,13 @@ Réponse :"""
 
     prompt = PromptTemplate.from_template(template)
 
-    
     def format_docs(docs):
-        return "\n\n".join(doc.page_content for doc in docs)
+        result = ""
+        for doc in docs:
+            nom_fichier = doc.metadata.get('source', 'Inconnu').split("\\")[-1].split("/")[-1]
+            result += f"[Source : {nom_fichier}]\n{doc.page_content}\n\n"
+        return result
 
-    
     rag_chain = (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
         | prompt
@@ -51,7 +53,6 @@ Réponse :"""
     
     return rag_chain, retriever
 
-# --- ZONE DE TEST ---
 if __name__ == "__main__":
     print("\n--- Test du Pipeline RAG Multi-Documents ---")
     
@@ -68,12 +69,7 @@ if __name__ == "__main__":
         print(f"QUESTION {index + 1} : {question}")
         print("="*50)
         
-        print("Recherche dans la base et génération par Llama 3.1...")
-        
-        # 1. On va chercher les documents sources
         docs_sources = retriever.invoke(question)
-        
-        # 2. On génère la réponse
         reponse = chain.invoke(question)
         
         print("\n RÉPONSE :")
@@ -83,7 +79,7 @@ if __name__ == "__main__":
         for i, doc in enumerate(docs_sources):
             source = doc.metadata.get('source', 'Inconnu')
             page = doc.metadata.get('page', 'Inconnu')
-            nom_fichier = source.split("\\")[-1].split("/")[-1] 
+            nom_fichier = source.split("\\")[-1].split("/")[-1]
             print(f"  - Source {i+1} : {nom_fichier} (Page {page})")
             
     print("\n" + "="*50)
