@@ -57,8 +57,8 @@ def setup_agent():
 
     tools = [recherche_documents_internes, web_tool, finance_tool, arxiv_tool, calculatrice]
 
-    print("Initialisation de Llama 3.3 70b...")
-    llm = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0)
+    print("Initialisation de Llama 3.1 8b...")
+    llm = ChatGroq(model_name="llama-3.1-8b-instant", temperature=0)
 
     agent_executor = create_react_agent(llm, tools)
     
