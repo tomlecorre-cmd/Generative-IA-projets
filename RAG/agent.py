@@ -1,5 +1,6 @@
 import os
 import sys
+import requests
 from dotenv import load_dotenv
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -51,11 +52,39 @@ def setup_agent():
         except Exception as e:
             return f"Erreur de calcul : {e}"
 
+    @tool
+    def meteo(ville: str) -> str:
+        """Obtenir la météo actuelle d'une ville. Entrée : nom de la ville en français ou anglais (ex: 'Paris', 'Londres')."""
+        try:
+            geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={ville}&count=1&language=fr"
+            geo_response = requests.get(geo_url)
+            geo_data = geo_response.json()
+            
+            if not geo_data.get("results"):
+                return f"Ville '{ville}' introuvable."
+            
+            lat = geo_data["results"][0]["latitude"]
+            lon = geo_data["results"][0]["longitude"]
+            nom_ville = geo_data["results"][0]["name"]
+            
+            meteo_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,wind_speed_10m,weathercode&timezone=auto"
+            meteo_response = requests.get(meteo_url)
+            meteo_data = meteo_response.json()
+            
+            current = meteo_data["current"]
+            temperature = current["temperature_2m"]
+            vent = current["wind_speed_10m"]
+            
+            return f"Météo à {nom_ville} : {temperature}°C, vent à {vent} km/h."
+        
+        except Exception as e:
+            return f"Erreur météo : {e}"
+
     web_tool = DuckDuckGoSearchRun(name="recherche_internet_generale")
     finance_tool = YahooFinanceNewsTool(name="recherche_bourse_yahoo")
     arxiv_tool = ArxivQueryRun(name="recherche_theses_arxiv")
 
-    tools = [recherche_documents_internes, web_tool, finance_tool, arxiv_tool, calculatrice]
+    tools = [recherche_documents_internes, web_tool, finance_tool, arxiv_tool, calculatrice, meteo]
 
     print("Initialisation de Llama 3.1 8b...")
     llm = ChatGroq(model_name="llama-3.1-8b-instant", temperature=0)
@@ -68,12 +97,12 @@ if __name__ == "__main__":
     agent = setup_agent()
     
     print("\n" + "="*50)
-    question = "Cherche sur Yahoo Finance le cours actuel de l'action de TotalEnergies (TTE.PA), puis utilise la calculatrice pour multiplier ce prix par 500 actions."
+    question = "Quelle est la météo à Paris aujourd'hui ?"
     print(f"QUESTION : {question}")
     print("="*50 + "\n")
     
     system_prompt = (
-        "Tu es un analyste financier de très haut niveau. Tu possèdes 5 outils spécialisés. "
+        "Tu es un analyste financier de très haut niveau. Tu possèdes 6 outils spécialisés. "
         "RÈGLE 1 : Analyse la question pour choisir l'outil le plus précis. "
         "RÈGLE 2 : Tu peux enchaîner les outils si nécessaire. "
         "RÈGLE 3 : Réponds TOUJOURS en français. "
