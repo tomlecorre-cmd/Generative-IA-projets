@@ -1,15 +1,15 @@
-# 📈 Assistant Financier Intelligent — RAG + Agents
+# Assistant Financier Intelligent — RAG + Agents
 
 Projet réalisé dans le cadre du **DU Data Analytics — IA Générative 2026**
 
-## 📌 Description
+## Description
 
 Un assistant conversationnel multi-compétences capable de :
 - Répondre à des questions basées sur des documents financiers internes (RAG)
 - Utiliser des outils externes de manière autonome (Agent)
 - Maintenir une conversation contextuelle (Mémoire)
 
-## 🏗️ Architecture
+## Architecture
 
 Question utilisateur
 ↓
@@ -19,22 +19,22 @@ RAG   Agent   Chat
 ↘     ↓      ↙
 Réponse finale
 
-## 🛠️ Stack technique
+## Stack technique
 
 - **LLM** : Llama 3 via Groq (gratuit et ultra-rapide)
 - **Agent** : LangGraph ReAct
 - **RAG** : LangChain + ChromaDB + HuggingFace Embeddings
 - **Interface** : Chainlit
 
-## 🔧 Outils disponibles
+## Outils disponibles
 
-1. 📄 Recherche dans les documents internes (RAG)
-2. 📊 Yahoo Finance (cours boursiers en temps réel)
-3. 🔍 DuckDuckGo (recherche web)
-4. 📚 ArXiv (publications scientifiques)
-5. 🧮 Calculatrice financière (Python natif)
+1.  Recherche dans les documents internes (RAG)
+2.  Yahoo Finance (cours boursiers en temps réel)
+3.  DuckDuckGo (recherche web)
+4.  ArXiv (publications scientifiques)
+5.  Calculatrice financière (Python natif)
 
-## ⚙️ Installation
+##  Installation
 
 1. Cloner le repo :
 ```bash
@@ -58,12 +58,12 @@ cp .env.example .env
 python RAG/vectorstore.py
 ```
 
-## 🚀 Lancement
+##  Lancement
 ```bash
 chainlit run app.py -w
 ```
 
-## 📁 Structure du projet
+##  Structure du projet
 
 ├── app.py              # Interface Chainlit + Routeur
 ├── RAG/
